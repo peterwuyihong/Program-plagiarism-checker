@@ -4,19 +4,19 @@ using namespace std;
 #define per(i,j,k) for(int i=j;i>=(k);i--)
 #define all(x) x.begin(),x.end()
 const int p=43;
-struct Hash{
-  string a[10];
-  int id[10];
-  int tot;
+struct Hash{//定义哈希表 
+  string a[10];//每个哈希值开一个链表 
+  int id[10];//由于只需要结尾插入操作 
+  int tot;//开数组也可以 
   Hash(){tot=0;}
 }H[43];
-int Hash(string s){
+int Hash(string s){//定义哈希函数 
   int a=0;
   return (s[0]*100+s[s.size()-1])%41;
   rep(i,0,s.size()-1)a=(a*89+s[i]-'a'+p*100)%p;
   return a;
 }
-int ge(string &str){
+int ge(string &str){//只读字母和下划线的读入函数 
 	char c=getchar();str.clear();
 	if(c==EOF)return 0;
 	while(!isalpha(c)&&c!='_'){
@@ -38,42 +38,35 @@ signed main(){
 	while(ge(s)){
 		dic[++n]=s;
 		int u=Hash(s);
-		H[u].a[++H[u].tot]=s;
-		H[u].id[H[u].tot]=n;
+		H[u].a[++H[u].tot]=s;//在最后插入关键字 
+		H[u].id[H[u].tot]=n;//id用来存储是字典里第几个关键字 
 	}
-	rep(i,0,42)cout<<H[i].tot<<endl;
+	rep(i,0,42)cout<<H[i].tot<<' ';//输出哈希值为i有几个关键字 
+	double u=0;
+	rep(i,0,42)u+=(H[i].tot+1)*H[i].tot/2;
+	printf("\n平均查找长度%lf\n",u/n);
 	freopen(fa.data(),"r",stdin);
-	int cnt=0;
-	double times=0;
 	while(ge(s)){
 		int u=Hash(s);
-		if(H[u].tot)cnt++;
 		rep(i,1,H[u].tot){
-			times++;
-			if(H[u].a[i]==s){
-				a[H[u].id[i]]++;
+			if(H[u].a[i]==s){//直到在相同哈希值中查找到 
+				a[H[u].id[i]]++; 
 				break;
 			}
 		}
 	}
-	printf("平均查找次数为%.2lf\n",times/cnt);
 	rep(i,1,n)printf("%s %d \n",dic[i].data(),a[i]);
 	puts("");
 	freopen(fb.data(),"r",stdin);
-	cnt=0;
-	times=0;
 	while(ge(s)){
 		int u=Hash(s);
-		if(H[u].tot)cnt++;
 		rep(i,1,H[u].tot){
-			times++;
 			if(H[u].a[i]==s){
 				b[H[u].id[i]]++;
 				break;
 			}
 		}
 	} 
-	printf("平均查找次数为%.2lf\n",times/cnt);
 	rep(i,1,n)printf("%s %d \n",dic[i].data(),b[i]);
 	puts("");
 	rep(i,1,n)printf("%d ",a[i]);puts("");
